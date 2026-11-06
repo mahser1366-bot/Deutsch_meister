@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Deutsch Meister">
+  <meta name="description" content="An offline-first German vocabulary app for your own imported words.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/app.css">
+  <title>Deutsch Meister 3.7.0</title>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Deutsch Meister home"><span class="brand-mark">D.</span><span>Deutsch Meister</span></a>
+    <button class="icon-button" id="settingsOpen" aria-label="Settings" title="Settings">⚙</button>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="view active" id="homeView" data-view="home">
+      <div class="page-heading"><h1>Your daily German practice</h1><p>Review your own vocabulary, one useful word at a time.</p></div>
+      <section class="focus-panel">
+        <div><span class="eyebrow">READY TO REVIEW</span><h2><strong id="homeDue">0</strong> words due</h2><p id="homeFocusText">Add your own words to begin.</p></div>
+        <button class="button button-primary" id="startReview">Start review</button>
+      </section>
+      <div class="home-stats">
+        <div><span>In your library</span><strong id="homeWords">0</strong></div>
+        <div><span>Mastered</span><strong id="homeMastered">0</strong></div>
+        <div><span>Current streak</span><strong id="homeStreak">0 days</strong></div>
+      </div>
+      <section class="goal-section">
+        <div class="row-between"><b>Today's goal</b><strong id="goalNumber">0 / 10</strong></div>
+        <div class="progress-track"><span id="goalBar"></span></div>
+        <div class="row-between muted"><span id="goalCaption">Every review counts.</span><span id="goalPercent">0%</span></div>
+      </section>
+      <article id="studyCard" class="study-card" hidden aria-live="polite">
+        <div class="study-session-bar"><div class="row-between muted"><span id="studyLevel">YOUR WORD</span><span id="studyCounter">1 / 1</span></div><button class="text-button end-review" id="endReview" type="button">End review ×</button></div>
+        <div class="study-card-scene">
+          <div class="study-card-inner" id="studyCardInner">
+            <section class="study-card-face study-card-front" aria-label="German word">
+              <div class="study-face-content"><span class="eyebrow">GERMAN</span><div class="study-word-row"><div><h2 id="studyGerman">—</h2><p id="studyMeta" class="muted"></p></div><button class="sound-button" id="studySpeak" aria-label="Listen to German word">🔊</button></div></div>
+              <button class="button button-primary full reveal-button" id="revealAnswer" type="button">Show answer <span aria-hidden="true">↻</span></button>
+            </section>
+            <section class="study-card-face study-card-back" aria-label="Answer">
+              <div id="studyAnswer">
+                <div class="answer-line"><div><span class="muted">English meaning</span><p id="studyTranslation"></p></div><button class="sound-button" id="studyTranslationSpeak" aria-label="Listen to English meaning">🔊</button></div>
+                <div class="answer-line" id="studyPersianBlock" hidden><div><span class="muted">Persian meaning</span><p id="studyPersianTranslation" lang="fa" dir="rtl"></p></div></div>
+                <div class="answer-line" id="studyGermanExampleBlock" hidden><div><span class="muted">German example</span><p id="studyExample"></p></div><button class="sound-button" id="studyExampleSpeakDe" aria-label="Listen to German example">🔊</button></div>
+                <div class="answer-line" id="studyEnglishExampleBlock" hidden><div><span class="muted">English translation</span><p id="studyExampleEn"></p></div><button class="sound-button" id="studyExampleSpeakEn" aria-label="Listen to English translation">🔊</button></div>
+                <a id="studyDictionaryLink" class="dictionary-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Open dictionary ↗</a>
+                <p class="rate-prompt">How well did you remember?</p>
+                <div class="rating-grid"><button data-rating="again"><b>Again</b><small>Soon</small></button><button data-rating="hard"><b>Hard</b><small>1 day</small></button><button data-rating="good"><b>Good</b><small>3 days</small></button><button data-rating="easy"><b>Easy</b><small>7 days</small></button></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </article>
+      <div id="learnEmpty" class="empty-state" hidden><h2 id="learnEmptyTitle">You're all caught up</h2><p id="learnEmptyText">There are no words due right now. Add vocabulary or come back later.</p><button class="button button-outline" data-action="go-library">Open library</button></div>
+      <div id="sessionProgress" class="muted session-progress" hidden></div>
+    </section>
+
+    <section class="view" id="practiceView" data-view="practice">
+      <div class="page-heading"><h1>Practice</h1><p>Exercises appear when your imported vocabulary contains the required information.</p></div>
+      <div class="exercise-list">
+        <button class="exercise-option" data-exercise="meaning"><span>Meaning quiz</span><small>Choose the correct translation</small><b>→</b></button>
+        <button class="exercise-option" data-exercise="article"><span>Article practice</span><small>Choose der, die or das</small><b>→</b></button>
+        <button class="exercise-option" data-exercise="plural"><span>Plural practice</span><small>Choose the correct plural form</small><b>→</b></button>
+        <button class="exercise-option" data-exercise="verb"><span>Verb practice</span><small>Use the conjugations you imported</small><b>→</b></button>
+        <button class="exercise-option" data-exercise="listening"><span>Listening practice</span><small>Listen to your example sentences</small><b>→</b></button>
+      </div>
+      <p id="practiceEmpty" class="empty-inline" hidden>Add words with translations, articles, plural forms, verb forms or example sentences to unlock matching exercises.</p>
+      <div id="exercisePanel" class="exercise-panel" hidden>
+        <div class="row-between"><span class="eyebrow" id="exerciseType">PRACTICE</span><button class="icon-button" id="closeExercise" aria-label="Close exercise">×</button></div>
+        <div class="exercise-progress"><span id="exerciseProgress"></span></div>
+        <h2 id="exercisePrompt"></h2>
+        <button id="exerciseAudio" class="button button-outline exercise-audio" hidden>Listen in German</button>
+        <div id="exerciseChoices" class="choice-list"></div>
+        <p id="exerciseFeedback" class="feedback" aria-live="polite"></p>
+        <p id="exerciseTranscript" class="feedback transcript" hidden></p>
+        <button id="exerciseNext" class="button button-primary full" hidden>Continue</button>
+      </div>
+    </section>
+
+    <section class="view" id="libraryView" data-view="library">
+      <div class="page-heading"><h1>Your vocabulary</h1><p>Only words you add or import appear here.</p></div>
+      <div class="library-toolbar"><span id="libraryCount" class="muted">0 words</span><div class="toolbar-actions"><button class="button button-outline" id="importCsvOpen">Import CSV</button><button class="button button-primary" id="addWordOpen">＋ Add word</button></div></div>
+      <input id="wordSearch" class="field search-field" type="search" placeholder="Search your words…" aria-label="Search vocabulary">
+      <div id="personalWordList" class="library-list"></div>
+      <button id="loadMoreWords" class="button button-outline full load-more" hidden>Show more</button>
+      <input id="importCsv" type="file" accept=".csv,text/csv,.tsv,text/tab-separated-values" hidden>
+      <form id="wordEditor" class="word-editor" hidden>
+        <div class="row-between"><h2 id="editorTitle">Add vocabulary</h2><button type="button" class="icon-button" id="closeEditor" aria-label="Close editor">×</button></div>
+        <label><span>German word or phrase *</span><input id="fieldGerman" class="field" required placeholder="das Buch"></label>
+        <div class="form-grid"><label><span>English translation</span><input id="fieldTranslation" class="field"></label><label><span>Persian translation (optional)</span><input id="fieldPersian" class="field" dir="rtl"></label><label><span>CEFR level</span><select id="fieldLevel" class="field"><option value="">Not set</option><option>A1</option><option>A2</option><option>B1</option><option>B2</option><option>C1</option><option>C2</option></select></label><label><span>Tags (comma-separated)</span><input id="fieldTags" class="field" placeholder="work, travel"></label><label><span>Article</span><input id="fieldArticle" class="field" placeholder="der / die / das"></label><label><span>Plural</span><input id="fieldPlural" class="field"></label><label><span>Part of speech</span><input id="fieldPartOfSpeech" class="field" placeholder="noun / verb / adjective"></label></div>
+        <label><span>Example sentence in German</span><textarea id="fieldExample" class="field" rows="2"></textarea></label>
+        <label><span>English example translation</span><textarea id="fieldExampleEn" class="field" rows="2"></textarea></label>
+        <label><span>Notes (optional)</span><textarea id="fieldNotes" class="field" rows="2"></textarea></label>
+        <details class="verb-fields"><summary>Verb forms (optional)</summary><div class="form-grid"><label><span>Present · ich</span><input id="fieldPresentIch" class="field"></label><label><span>Present · du</span><input id="fieldPresentDu" class="field"></label><label><span>Present · er/sie/es</span><input id="fieldPresentEr" class="field"></label><label><span>Present · wir</span><input id="fieldPresentWir" class="field"></label><label><span>Present · ihr</span><input id="fieldPresentIhr" class="field"></label><label><span>Present · sie/Sie</span><input id="fieldPresentSie" class="field"></label><label><span>Präteritum</span><input id="fieldPrateritum" class="field"></label><label><span>Perfekt</span><input id="fieldPerfekt" class="field"></label><label><span>Perfekt auxiliary</span><select id="fieldAuxiliary" class="field"><option value="">—</option><option>haben</option><option>sein</option></select></label></div></details>
+        <label><span>Dictionary URL (optional)</span><input id="fieldDictionaryUrl" class="field" type="url" placeholder="https://www.verbformen.com/…"></label>
+        
+        <button class="button button-primary full" type="submit">Save word</button>
+        <input id="editId" type="hidden">
+      </form>
+    </section>
+
+    <section class="view" id="progressView" data-view="progress">
+      <div class="page-heading"><h1>Your progress</h1><p>A simple overview of your own learning activity.</p></div>
+      <div class="progress-stats">
+        <div><span>Current streak</span><strong id="progressStreak">0 <small>days</small></strong><p id="progressStreakMessage">Start your next streak today.</p></div>
+        <div><span>Total reviews</span><strong id="totalReviews">0</strong></div>
+        <div><span>Mastered words</span><strong id="progressMastered">0</strong></div>
+        <div><span>Quiz accuracy</span><strong id="quizAccuracy">—</strong></div>
+      </div>
+      <section class="progress-section"><h2>Activity · last seven days</h2><div class="activity-chart" id="activityChart"></div><p class="muted" id="progressActivityNote">Your reviews over the last seven days.</p></section>
+      <section class="progress-section"><h2 id="monthlyCalendarTitle">Monthly activity</h2><div id="monthlyCalendar" class="month-calendar" aria-label="Monthly learning activity"></div><p class="muted">Days are highlighted when review or quiz activity was recorded.</p></section>
+      <section class="progress-section"><h2>CEFR vocabulary</h2><div id="cefrDistribution" class="cefr-distribution"></div></section>
+      <section class="progress-section"><h2>Vocabulary status</h2><div class="status-stats"><div><span>Due for review</span><strong id="progressDue">0</strong></div><div><span>Still learning</span><strong id="progressLearning">0</strong></div></div><div class="method-snapshot" id="methodSnapshot" aria-live="polite"></div><div class="muted small" id="schedulerBreakdown"></div></section>
+    </section>
+
+    <section class="view" id="settingsView" data-view="settings">
+      <div class="page-heading"><h1>Settings</h1><p>Keep only the preferences you need.</p></div>
+      <section class="settings-section"><h2>Preferences</h2>
+        <label class="setting-row"><span>Appearance</span><select id="themeSelect" class="field"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></label>
+        <label class="setting-row"><span>Daily review goal</span><select id="dailyGoalSelect" class="field"><option>5</option><option>10</option><option>15</option><option>20</option><option>30</option></select></label>
+        <label class="setting-row"><span>Review method</span><select id="algorithmSelect" class="field"><option value="sm2">SM-2</option><option value="leitner">Leitner</option></select></label>
+        <label class="setting-row"><span>Speech speed</span><select id="speechRate" class="field"><option value="0.75">Slow</option><option value="0.88">Normal</option><option value="1">Fast</option></select></label>
+      </section>
+      <section class="settings-section"><h2>Pronunciation</h2>
+        <label class="setting-row"><span>German voice</span><select id="germanSpeechVoice" class="field"><option value="system">System voice</option><option value="jarvis">Jarvis · Neural</option></select></label>
+        <label class="setting-row"><span>English voice</span><select id="englishSpeechVoice" class="field"><option value="system">System voice</option><option value="amy">Amy · Neural</option></select></label>
+        <div id="voiceDownloadStatus" class="status-line" aria-live="polite">Jarvis and Amy download automatically on first launch (about 126 MB total).</div>
+        <div id="voiceProgressTrack" class="voice-progress" hidden><span id="voiceProgressBar"></span></div>
+        <div class="voice-actions"><button class="button button-outline" id="deleteVoiceModels">Delete downloaded voices</button><button class="button button-outline" id="downloadVoiceModels" hidden>Download voices again</button></div>
+        <details class="voice-diagnostics"><summary>Neural voice diagnostics</summary><p id="voiceDiagnosticStatus" class="status-line" aria-live="polite">No neural speech test has been run.</p><ol id="voiceDiagnosticLog" class="voice-diagnostic-log"></ol></details>
+        <p class="muted small">Models and speech engine are saved on this device for offline use. System voices remain available.</p>
+        <details class="voice-credits"><summary>Voice credits and licences</summary>
+          <p class="muted small">German Jarvis by ufozone · CC BY-NC-SA 4.0. <a href="https://huggingface.co/ufozone/piper-de_DE-jarvis-medium" target="_blank" rel="noopener noreferrer">Model source</a>.</p>
+          <p class="muted small">English Amy · based on the MycroftAI Mimic 3 voice dataset · CC BY-SA 4.0. <a href="https://huggingface.co/rhasspy/piper-voices/tree/v1.0.0/en/en_US/amy/medium" target="_blank" rel="noopener noreferrer">Model source</a> · <a href="https://github.com/MycroftAI/mimic3-voices/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">Dataset licence</a>.</p>
+        </details>
+      </section>
+      <section class="settings-section"><h2>Data and backup</h2>
+        <div class="data-actions"><button class="button button-outline" id="exportJson">Export backup</button><label class="button button-outline file-button">Restore backup<input id="restoreJson" type="file" accept="application/json,.json"></label><button class="button button-outline" id="exportCsv">Export vocabulary CSV</button></div>
+        <p id="dataStatus" class="status-line" aria-live="polite"></p>
+        <div class="import-batches"><h3>Imported CSV files</h3><p class="muted small">Delete one complete import without affecting other words.</p><div id="importBatchList" class="import-batch-list"></div></div>
+        <button class="text-button" id="resetProgress">Reset learning progress (keep words)</button>
+        <div class="danger-zone"><p>Delete all manually added and imported vocabulary.</p><button class="button button-danger" id="deletePersonalWords">Delete all vocabulary</button></div>
+      </section>
+      <p class="app-version">DEUTSCH MEISTER · VERSION 3.7.0</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-nav="home"><span>⌂</span><small>Home</small></button>
+    <button class="nav-item" data-nav="practice"><span>✳</span><small>Practice</small></button>
+    <button class="nav-item" data-nav="library"><span>▦</span><small>Library</small></button>
+    <button class="nav-item" data-nav="progress"><span>◴</span><small>Progress</small></button>
+  </nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
